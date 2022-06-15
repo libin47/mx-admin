@@ -18,7 +18,7 @@ export interface NoteModel {
   nid: number
   music?: NoteMusicRecord[]
   location?: string
-
+  qa?: string | null
   coordinates?: Coordinate
 }
 

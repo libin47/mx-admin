@@ -28,6 +28,8 @@ import {
   TopicIcon,
   UndoAltIcon,
   UserFriendsIcon,
+  QuestionIcon,
+  PhotoVideoIcon
 } from 'components/icons'
 import $RouterView from 'layouts/router-view'
 import { SidebarLayout } from 'layouts/sidebar'
@@ -139,6 +141,72 @@ export const routeForMenu: Array<RouteRecordRaw> = [
       },
     ],
   },
+  // add
+  {
+    path: '/images',
+    name: RouteName.Image,
+    meta: {
+      title: '照片管理',
+      icon: (
+        < PhotoVideoIcon/>
+      ),
+    },
+    redirect: '/images/albums',
+    component: $RouterView,
+    children: [
+      {
+        path: 'albums',
+        name: RouteName.EditAlbum,
+        meta: {
+          title: '相册',
+          icon: (
+            <EyeIcon/>
+          ),
+        },
+        component: () =>
+          import('../views/manage-images/albums').then(
+            (m) => m.ManageAlbumsListView,
+          ),
+      },
+      {
+        path: 'photos',
+        name: RouteName.EditaPhoto,
+        meta: {
+          icon: (
+            <PhotoVideoIcon />
+          ),
+          title: '照片',
+        },
+        component: () => import('../views/manage-images/list').then(
+          (m) => m.PhotoWriteView,
+        ),
+      },
+
+      {
+        path: 'uploaads',
+        name: RouteName.UploadImage,
+        meta: {
+          title: '上传',
+          icon: (
+            <PencilAltIcon />
+          ),
+        },
+        component: () => import('../views/manage-images/aaaaaa')
+      },
+
+    ],
+  },
+  {
+    path: '/qas',
+    name: RouteName.QA,
+    meta: {
+      title: '问题',
+      icon: (
+        <QuestionIcon />
+      ),
+    },
+    component: () => import('../views/manage-qas/index').then((m)=>m.QAView),
+  },
   {
     path: '/comments',
     name: RouteName.Comment,
@@ -182,15 +250,6 @@ export const routeForMenu: Array<RouteRecordRaw> = [
         component: () => import('../views/manage-pages/write'),
       },
     ],
-  },
-  {
-    path: '/files',
-    name: RouteName.File,
-    meta: {
-      title: '文件',
-      icon: <SymbolIcon />,
-    },
-    component: () => import('../views/manage-files'),
   },
   {
     path: '/says',

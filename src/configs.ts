@@ -1,3 +1,3 @@
 export const configs = {
-  title: window.injectData.TITLE || '静かな森',
+  title: window.injectData.TITLE || '守望者の麦田',
 }

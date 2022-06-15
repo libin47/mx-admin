@@ -22,6 +22,7 @@ import {
 import { Suspense, defineComponent, ref, watch } from 'vue'
 
 import { Icon } from '@vicons/utils'
+import type Vditor from 'vditor'
 
 import { Editor, EditorStorageKeys } from './constants'
 import styles from './editor.module.css'
@@ -106,6 +107,7 @@ export const _EditorToggleWrapper = defineComponent({
     )
 
     const monacoRef = ref<editor.IStandaloneCodeEditor>()
+    const vditorRef = ref<Vditor>()
 
     const { general } = useEditorConfig()
 
@@ -127,6 +129,12 @@ export const _EditorToggleWrapper = defineComponent({
         case 'plain': {
           const PlainEditor = getDynamicEditor(currentEditor.value)
           return <PlainEditor {...props} />
+        }
+
+        case 'vditor': {
+          const VditorEditor = getDynamicEditor(currentEditor.value)
+          console.log(VditorEditor)
+          return <VditorEditor {...props} innerRef={vditorRef} />
         }
 
         case 'codemirror': {

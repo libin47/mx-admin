@@ -71,6 +71,18 @@ export default ({ mode }) => {
 
     server: {
       // https: true,
+      proxy: {
+        '/upload': {
+        target: 'https://image.wind-watcher.cn',
+        changeOrigin: true,
+      },
+      '/admin': {
+        target: 'https://image.wind-watcher.cn',
+        changeOrigin: true,
+      },
+
+
+    },
       port: 9528,
     },
     esbuild: {

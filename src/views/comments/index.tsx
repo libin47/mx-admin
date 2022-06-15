@@ -462,8 +462,8 @@ const ManageComment = defineComponent(() => {
                                     const end = $ta.selectionEnd as number
 
                                     $ta.value =
-                                      `${$ta.value.substring(0, start) 
-                                      } ${kaomoji} ${ 
+                                      `${$ta.value.substring(0, start)
+                                      } ${kaomoji} ${
                                       $ta.value.substring(end, $ta.value.length)}`
                                     replyText.value = $ta.value
                                     nextTick(() => {

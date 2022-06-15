@@ -6,6 +6,6 @@ export const EditorStorageKeys = {
 export enum Editor {
   monaco = 'monaco',
   codemirror = 'codemirror',
-
+  vditor = 'vditor',
   plain = 'plain',
 }

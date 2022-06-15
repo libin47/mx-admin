@@ -19,7 +19,10 @@ import {
   NButton,
   NButtonGroup,
   NDatePicker,
+  NDrawer,
+  NDrawerContent,
   NDynamicTags,
+  NForm,
   NFormItem,
   NInput,
   NSelect,
@@ -42,6 +45,7 @@ import {
   watch,
 } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
+import { QAModel} from 'models/qas'
 
 import type { PaginateResult } from '@mx-space/api-client'
 import { Icon } from '@vicons/utils'
@@ -56,6 +60,7 @@ type NoteReactiveType = {
   music: NoteMusicRecord[]
   location: null | string
   coordinates: null | Coordinate
+  qa: string | null
   topicId: string | null | undefined
 } & WriteBaseType
 
@@ -115,6 +120,8 @@ const NoteWriteView = defineComponent(() => {
     topicId: undefined,
     images: [],
     meta: undefined,
+
+    qa: null,
   })
 
   const parsePayloadIntoReactiveData = (payload: NoteModel) =>
@@ -146,6 +153,8 @@ const NoteWriteView = defineComponent(() => {
     { immediate: true },
   )
 
+  const QAdata = ref<QAModel[]>()
+
   onMounted(async () => {
     const $id = id.value
     if ($id && typeof $id == 'string') {
@@ -171,6 +180,8 @@ const NoteWriteView = defineComponent(() => {
 
       parsePayloadIntoReactiveData(data as NoteModel)
     }
+    const qaload = (await RESTManager.api.QA.get()) as any
+    QAdata.value = qaload.data
   })
 
   const drawerShow = ref(false)
@@ -178,7 +189,7 @@ const NoteWriteView = defineComponent(() => {
   const message = useMessage()
   const router = useRouter()
 
-  const enablePassword = computed(() => typeof data.password === 'string')
+  const enablePassword = computed(() => typeof data.qa === 'string')
 
   const handleSubmit = async () => {
     const parseDataToPayload = (): { [key in keyof NoteModel]?: any } => {
@@ -356,7 +367,7 @@ const NoteWriteView = defineComponent(() => {
                   data.coordinates = null
                 }}
               >
-                清楚
+                清除
               </NButton>
             </NButtonGroup>
 
@@ -371,32 +382,34 @@ const NoteWriteView = defineComponent(() => {
           </NSpace>
         </NFormItem>
 
-        <NFormItem label="设定密码?" labelAlign="right" labelPlacement="left">
+        <NFormItem label="设定口令?" labelAlign="right" labelPlacement="left" >
           <NSwitch
             value={enablePassword.value}
             onUpdateValue={(e) => {
               if (e) {
-                data.password = ''
+                data.qa = ''
               } else {
-                data.password = null
+                data.qa = null
               }
             }}
           />
         </NFormItem>
         {enablePassword.value && (
-          <NFormItem label="输入密码">
-            <NInput
-              disabled={!enablePassword.value}
-              placeholder=""
-              type="password"
-              value={data.password}
-              inputProps={{
-                name: 'note-password',
-                autocapitalize: 'off',
-                autocomplete: 'new-password',
+          <NFormItem label="口令" required>
+            <NSelect
+              placeholder="无"
+              value={data.qa}
+              onUpdateValue={(e) => {
+                data.qa = e
               }}
-              onInput={(e) => void (data.password = e)}
-            ></NInput>
+              options={
+                QAdata.value?.map((i) => ({
+                  label: i.question,
+                  value: i.id,
+                  key: i.id,
+                })) || []
+              }
+            ></NSelect>
           </NFormItem>
         )}
         <NFormItem

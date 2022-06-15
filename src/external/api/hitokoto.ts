@@ -16,7 +16,7 @@ export const fetchHitokoto = async (
   type: SentenceType[] | SentenceType = SentenceType.文学,
 ) => {
   const json = await fetch(
-    `https://v1.hitokoto.cn/${ 
+    `https://v1.hitokoto.cn/${
       Array.isArray(type)
         ? `?${type.map((t) => `c=${t}`).join('&')}`
         : `?c=${type}`}`,

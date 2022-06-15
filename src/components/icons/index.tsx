@@ -55,7 +55,9 @@ import ExternalLink from '@vicons/tabler/es/ExternalLink'
 import Template from '@vicons/tabler/es/Layout2'
 import Log from '@vicons/tabler/es/News'
 import Pencil from '@vicons/tabler/es/Pencil'
+import PhotoVideo from '@vicons/fa/PhotoVideo'
 import Settings from '@vicons/tabler/es/Settings'
+import Question from '@vicons/tabler/es/QuestionMark'
 
 export { Lock as LockIcon }
 export { Pen as PenIcon }
@@ -104,6 +106,8 @@ export {
   Template as TemplateIcon,
   Log as LogIcon,
   Pencil as PencilIcon,
+  Question as QuestionIcon,
+  PhotoVideo as PhotoVideoIcon,
 }
 export { QuestionCircleOutlined as QuestionCircleIcon }
 export { SlackHash as SlackHashIcon }

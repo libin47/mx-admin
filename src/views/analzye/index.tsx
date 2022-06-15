@@ -8,7 +8,7 @@ import { ContentLayout } from 'layouts/content'
 import { isEmpty } from 'lodash-es'
 import type { UA } from 'models/analyze'
 import type { Pager } from 'models/base'
-import { NButton, NEllipsis, NP, NSkeleton, NSpace } from 'naive-ui'
+import { NButton, NEllipsis, NP, NSkeleton, NSpace, useDialog, useMessage, } from 'naive-ui'
 import type { TableColumns } from 'naive-ui/lib/data-table/src/interface'
 import { RESTManager, parseDate } from 'utils'
 import {
@@ -22,6 +22,21 @@ import {
 import { useRoute, useRouter } from 'vue-router'
 
 import { Chart } from '@antv/g2/esm'
+
+interface IP {
+  ip: string
+  countryName: string
+  regionName: string
+  cityName: string
+  ownerDomain: string
+  ispDomain: string
+  range?: {
+    from: string
+    to: string
+  }
+}
+
+
 
 const SectionTitle = defineComponent((_, { slots }) => () => (
   <div class="font-semibold text-gray-400 my-[12px] ">{slots.default?.()}</div>
@@ -164,7 +179,7 @@ export default defineComponent({
 
     // graph
     const count = ref({} as Total)
-    const todayIp = ref<string[]>()
+    const todayIp = ref([] as string[])
     const graphData = ref(
       {} as {
         day: any[]
@@ -172,7 +187,31 @@ export default defineComponent({
         month: any[]
       },
     )
-    const topPaths = ref([] as Path[])
+    const ipinfo = ref<City[]>([])
+
+    const get_iplist = (async()=>{
+      let inlistsign = false
+      let iplist: City[] = []
+      // topPaths.value = [...data.paths]
+      for(let i=0;i<todayIp.value.length;i++){
+        const dataip:IP = (await RESTManager.api.tools.ip(todayIp.value[i]).get())
+        for(let j=0;j<iplist.length;j++){
+          if(dataip.cityName == iplist[j].city){
+            iplist[j].count += 1
+            inlistsign = true
+            continue
+          }
+        }
+        if(!inlistsign){
+          iplist.push({city: dataip.cityName, count:1})
+        }
+        inlistsign = false
+      }
+      ipinfo.value = iplist
+      return iplist
+    })
+
+    // const topPaths = ref([] as Path[])
     onBeforeMount(async () => {
       const data =
         (await RESTManager.api.analyze.aggregate.get()) as IPAggregate
@@ -183,7 +222,7 @@ export default defineComponent({
         week: data.weeks,
         month: data.months,
       }
-      topPaths.value = [...data.paths]
+      await get_iplist()
     })
 
     const Graph = defineComponent(() => {
@@ -266,15 +305,15 @@ export default defineComponent({
         }
       }
       onMounted(() => {
-        if (!isEmpty(toRaw(graphData.value))) {
+        if ((!isEmpty(toRaw(graphData.value))) && (ipinfo.value.length>0)) {
           renderAllChart()
         }
       })
 
       const watcher = watch(
-        () => graphData,
+        () => [graphData, ipinfo],
         (n, old) => {
-          if (!isEmpty(toRaw(graphData.value))) {
+          if ((!isEmpty(toRaw(graphData.value))) && (ipinfo.value.length>0)){
             renderAllChart()
 
             watcher()
@@ -284,12 +323,12 @@ export default defineComponent({
       )
 
       function renderPie(el: HTMLElement) {
-        const pieData = topPaths.value.slice(0, 10)
+        const pieData = ipinfo.value
         const total = pieData.reduce((prev, { count }) => count + prev, 0)
 
         const data = pieData.map((paths) => {
           return {
-            item: decodeURI(paths.path),
+            item: decodeURI(paths.city),
             count: paths.count,
             percent: paths.count / total,
           }
@@ -350,7 +389,7 @@ export default defineComponent({
             )}
           </div>
           <div>
-            <SectionTitle>最近 7 天请求路径 Top 10</SectionTitle>
+            <SectionTitle>今日访问地区</SectionTitle>
             <div ref={pieChart}></div>
             {isEmpty(graphData.value) && (
               <NSkeleton animated height={250}></NSkeleton>
@@ -470,6 +509,11 @@ enum Key {
 interface Path {
   count: number
   path: string
+}
+
+interface City {
+  count: number
+  city: string
 }
 
 interface Today {

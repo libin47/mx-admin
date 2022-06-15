@@ -86,9 +86,9 @@ export default defineComponent(() => {
             message.error(`只能解析 markdown 文件, 但是得到了 ${file.type}`)
 
             reject(
-              `File must be markdown. got type: ${ 
-                file.type 
-                }, got ext: ${ 
+              `File must be markdown. got type: ${
+                file.type
+                }, got ext: ${
                 ext}`,
             )
             return

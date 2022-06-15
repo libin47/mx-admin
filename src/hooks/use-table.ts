@@ -41,3 +41,25 @@ export const useDataTableFetch = <T = any>(
     },
   }
 }
+
+export const usePhotoTable = <T = any>(
+  fetchDataFn: (data: Ref<T[]>, pager: Ref<Pager>, $id: Ref<string> , name: Ref<string>) => fetchDataFn,
+) => {
+  const $id: Ref<string> = ref<string>() as any
+  const name: Ref<string> = ref<string>() as any
+  const data: Ref<T[]> = ref<T[]>([]) as any
+  const pager = ref<Pager>({} as any)
+  const loading = ref(false)
+  return {
+    $id,
+    name,
+    data,
+    pager,
+    loading,
+    fetchDataFn: async (page?: number, size?: number) => {
+      loading.value = true
+      await fetchDataFn(data, pager, $id, name)(page, size)
+      loading.value = false
+    },
+  }
+}

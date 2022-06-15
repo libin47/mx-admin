@@ -1348,10 +1348,6 @@ All notable changes to this project will be documented in this file.
 
 - Re-format
 
-### Release
-
-- V3.10.0
-
 ## [3.9.8] - 2021-11-21
 
 ### Bug Fixes
@@ -2376,7 +2372,6 @@ All notable changes to this project will be documented in this file.
 ### Bug Fixes
 
 - Prod bug
-- Tsconfig `esModuleInterop` !!!!
 - Update dependency naive-ui to v2.12.0 (#10)
 - Update dependency vue-router to v4.0.9 (#7)
 - Sidebar layout responsive

@@ -1,11 +1,10 @@
 import { NSpin } from 'naive-ui'
-
 import { PlainEditor } from '../plain/plain'
 import { Editor } from './constants'
 
 const cache: Record<Editor, any> = {
   [Editor.monaco]: null,
-
+  [Editor.vditor]: null,
   [Editor.plain]: null,
   [Editor.codemirror]: null,
 }
@@ -23,6 +22,16 @@ export const getDynamicEditor = (editor: Editor) => {
       })
       cache[editor] = MonacoEditor
       return MonacoEditor
+    }
+
+    case 'vditor':{
+      const VditorEditor = defineAsyncComponent({
+        loader: () => import('../vditor/vditor').then((m) => m.VditorEditor),
+        loadingComponent: <NSpin strokeWidth={14} show rotate />,
+        suspensible: true,
+      })
+      cache[editor] = VditorEditor
+      return VditorEditor
     }
 
     case 'plain': {
