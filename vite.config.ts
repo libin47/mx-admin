@@ -48,7 +48,7 @@ export default ({ mode }) => {
     },
 
     build: {
-      chunkSizeWarningLimit: 2500,
+      chunkSizeWarningLimit: 5000,
       target: 'esnext',
       brotliSize: false,
 
