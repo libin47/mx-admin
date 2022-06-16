@@ -1,13 +1,9 @@
 import { FunctionCodeEditor } from 'components/function-editor'
-import { usePropsValueToRef } from 'hooks/use-async-monaco'
-import type { PropType } from 'vue'
-
+import { CenterSpin } from 'components/spin'
+import { useAsyncLoadMonaco, usePropsValueToRef } from 'hooks/use-async-monaco'
+import { PropType } from 'vue'
 export const CodeEditorForSnippet = defineComponent({
   props: {
-    onSave: {
-      type: Function as PropType<() => any>,
-    },
-
     value: {
       type: String,
       required: true,
@@ -22,30 +18,74 @@ export const CodeEditorForSnippet = defineComponent({
     },
   },
   setup(props) {
-    const value = usePropsValueToRef(props)
-
     const editorRef = ref()
 
-    watch(
-      () => value.value,
-      () => {
-        if (!editorRef.value) {
-          return
-        }
-        if (editorRef.value.loaded) {
-          props.onChange(value.value)
-        }
+    const value = usePropsValueToRef(props)
+
+    const obj = useAsyncLoadMonaco(
+      editorRef,
+      value,
+      (v) => {
+        value.value = v
+      },
+      {
+        language: props.language,
       },
     )
 
+    watch(
+      () => value.value,
+      (v) => {
+        props.onChange(v)
+      },
+    )
+    let timer: any = null
+    onUnmounted(() => {
+      if (timer) {
+        timer = clearTimeout(timer)
+      }
+    })
+    const setModelLanguage = (language: string) => {
+      const editor = obj.editor
+      if (!editor) {
+        timer = setTimeout(() => {
+          setModelLanguage(language)
+        }, 100)
+        return
+      }
+      const model = editor.getModel()
+      if (!model) {
+        timer = setTimeout(() => {
+          setModelLanguage(language)
+        }, 100)
+        return
+      }
+      import('monaco-editor').then((mo) => {
+        mo.editor.setModelLanguage(model, language)
+      })
+    }
+
+    watch(
+      () => props.language,
+      (lang) => {
+        setModelLanguage(lang)
+      },
+    )
     return () => (
       <div class={'h-full w-full relative'}>
-        <FunctionCodeEditor
+        <div
           ref={editorRef}
-          value={value}
-          onSave={props.onSave}
-          language={props.language}
+          class={'h-full w-full relative'}
+          style={{ display: props.language === 'javascript' ? 'none' : '' }}
         />
+
+        {!obj.loaded.value && (
+          <CenterSpin description="Monaco 体积较大耐心等待加载完成..." />
+        )}
+
+        {props.language === 'javascript' && (
+          <FunctionCodeEditor value={value} />
+        )}
       </div>
     )
   },
