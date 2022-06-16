@@ -196,14 +196,14 @@ export default defineComponent({
       for(let i=0;i<todayIp.value.length;i++){
         const dataip:IP = (await RESTManager.api.tools.ip(todayIp.value[i]).get())
         for(let j=0;j<iplist.length;j++){
-          if(dataip.cityName == iplist[j].city){
+          if(dataip.regionName+dataip.cityName == iplist[j].city){
             iplist[j].count += 1
             inlistsign = true
             continue
           }
         }
         if(!inlistsign){
-          iplist.push({city: dataip.cityName, count:1})
+          iplist.push({city: dataip.regionName+dataip.cityName, count:1})
         }
         inlistsign = false
       }

@@ -4,6 +4,10 @@ import { useAsyncLoadMonaco, usePropsValueToRef } from 'hooks/use-async-monaco'
 import { PropType } from 'vue'
 export const CodeEditorForSnippet = defineComponent({
   props: {
+    onSave: {
+      type: Function as PropType<() => any>,
+    },
+
     value: {
       type: String,
       required: true,
