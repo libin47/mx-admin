@@ -19,6 +19,7 @@ import {
 import { basename, extname } from 'path-browserify'
 import { RESTManager } from 'utils'
 import type { PropType } from 'vue'
+import { unref } from 'vue'
 
 type SnippetList = {
   name: string
