@@ -37,7 +37,7 @@ export const PhotoWriteView = defineComponent({
   name: 'PhotoList',
   setup() {
     const route = useRoute()
-    const urlpr: string = "https://image.wind-watcher.cn/"
+    const urlpr: string = "http://image.wind-watcher.cn/"
     const urlend: string = "?w=300&h=300"
     const id = computed(() => route.query.id)
 

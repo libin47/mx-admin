@@ -73,11 +73,11 @@ export default ({ mode }) => {
       // https: true,
       proxy: {
         '/upload': {
-        target: 'https://image.wind-watcher.cn',
+        target: 'http://image.wind-watcher.cn',
         changeOrigin: true,
       },
       '/admin': {
-        target: 'https://image.wind-watcher.cn',
+        target: 'http://image.wind-watcher.cn',
         changeOrigin: true,
       },
 

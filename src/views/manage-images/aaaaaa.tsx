@@ -271,7 +271,7 @@ const PhotoUploadView = defineComponent(()=>{
       name:"pic",
       status:'finished',
       percentage: 100,
-      url:'https://image.wind-watcher.cn/'+item,
+      url:'http://image.wind-watcher.cn/'+item,
     }})
     data['length'] = data.photos.length
   }
