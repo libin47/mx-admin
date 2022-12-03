@@ -1,0 +1,1 @@
+import{dg as r,H as u,n,R as o}from"./index-e5bed378.js";const l=r("album",()=>{const e=u(),t=n(()=>new Map(e.value?.map(a=>[a.id,a]))||new Map);return{data:e,map:t,get(a){return t.value.get(a)},async fetch(a){if(!e.value||a){const s=await o.api.albums.get({params:{type:"Album"}});e.value=s.data}else return e.value}}});export{l as u};
